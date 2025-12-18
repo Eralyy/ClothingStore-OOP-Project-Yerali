@@ -16,7 +16,6 @@ public class ClothingItem {
         this.brand = brand;
     }
 
-    // Getters
     public int getId() {
         return id;
     }
@@ -37,7 +36,6 @@ public class ClothingItem {
         return brand;
     }
 
-    // Setters
     public void setId(int id) {
         this.id = id;
     }
@@ -51,7 +49,6 @@ public class ClothingItem {
     }
 
     public void setPrice(double price) {
-        // price cannot be negative
         if (price < 0) {
             this.price = 0;
         } else {
@@ -63,14 +60,12 @@ public class ClothingItem {
         this.brand = brand;
     }
 
-    // Logic method #1
     public void applyDiscount(double percent) {
         if (percent < 0) percent = 0;
         if (percent > 100) percent = 100;
         price = price * (1 - percent / 100.0);
     }
 
-    // Logic method #2
     public boolean isExpensive() {
         return price > 50000;
     }

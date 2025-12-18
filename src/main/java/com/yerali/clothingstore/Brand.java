@@ -14,7 +14,6 @@ public class Brand {
         setRating(rating); // uses validation
     }
 
-    // Getters
     public int getId() {
         return id;
     }
@@ -31,7 +30,6 @@ public class Brand {
         return rating;
     }
 
-    // Setters
     public void setId(int id) {
         this.id = id;
     }
@@ -45,7 +43,6 @@ public class Brand {
     }
 
     public void setRating(double rating) {
-        // keep rating between 0 and 5
         if (rating < 0) {
             this.rating = 0;
         } else if (rating > 5) {
@@ -55,12 +52,10 @@ public class Brand {
         }
     }
 
-    // Logic method #1
     public boolean isPremium() {
         return rating >= 4.5;
     }
 
-    // Logic method #2
     public void increaseRating(double value) {
         setRating(this.rating + value);
     }

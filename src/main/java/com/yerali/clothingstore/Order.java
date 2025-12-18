@@ -14,7 +14,6 @@ public class Order {
         setStatus(status);
     }
 
-    // Getters
     public int getId() {
         return id;
     }
@@ -31,7 +30,6 @@ public class Order {
         return status;
     }
 
-    // Setters
     public void setId(int id) {
         this.id = id;
     }
@@ -65,19 +63,16 @@ public class Order {
         return s.substring(0, 1).toUpperCase() + s.substring(1);
     }
 
-    // Logic method #1
     public void addToTotal(double amount) {
         if (amount > 0) {
             totalAmount += amount;
         }
     }
 
-    // Logic method #2
     public void complete() {
         status = "Completed";
     }
 
-    // (extra logic method - ok to have more)
     public boolean isPending() {
         return status.equals("Pending");
     }

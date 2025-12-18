@@ -9,7 +9,6 @@ public class ClothingBrandsOopApplication {
         System.out.println("Student: Yerali");
         System.out.println("-----------------------------------------");
 
-        // 1) Create objects (5+ total)
         Brand brand1 = new Brand(1, "ZARA", "Spain", 4.6);
         Brand brand2 = new Brand(2, "Uniqlo", "Japan", 4.3);
 
@@ -18,7 +17,6 @@ public class ClothingBrandsOopApplication {
 
         Order order1 = new Order(5001, "Ayan", 0, "Pending");
 
-        // 2) Print objects (toString)
         System.out.println("\n--- OBJECTS (toString) ---");
         System.out.println(brand1);
         System.out.println(brand2);
@@ -26,13 +24,11 @@ public class ClothingBrandsOopApplication {
         System.out.println(item2);
         System.out.println(order1);
 
-        // 3) Test getters
         System.out.println("\n--- TESTING GETTERS ---");
         System.out.println("brand1 name: " + brand1.getName());
         System.out.println("item2 price: " + item2.getPrice());
         System.out.println("order1 status: " + order1.getStatus());
 
-        // 4) Test setters
         System.out.println("\n--- TESTING SETTERS ---");
         brand2.setCountry("Japan (Tokyo)");
         item1.setSize("S");
@@ -41,7 +37,6 @@ public class ClothingBrandsOopApplication {
         System.out.println("Updated item1 size: " + item1.getSize());
         System.out.println("Updated order1 customer: " + order1.getCustomerName());
 
-        // 5) Test logic methods
         System.out.println("\n--- TESTING METHODS (LOGIC) ---");
 
         System.out.println("Is brand1 premium? " + brand1.isPremium());
@@ -61,7 +56,6 @@ public class ClothingBrandsOopApplication {
         order1.complete();
         System.out.println("order1 status after complete(): " + order1.getStatus());
 
-        // 6) Final state print
         System.out.println("\n--- FINAL STATE ---");
         System.out.println(brand2);
         System.out.println(item1);
