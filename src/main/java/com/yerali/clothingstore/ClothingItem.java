@@ -4,9 +4,9 @@ public class ClothingItem {
 
     private int id;
     private String name;
-    private String size;   // S, M, L, XL
-    private double price;  // in KZT
-    private Brand brand;   // OOP: composition
+    private String size;
+    private double price;
+    private Brand brand;
 
     public ClothingItem(int id, String name, String size, double price, Brand brand) {
         this.id = id;

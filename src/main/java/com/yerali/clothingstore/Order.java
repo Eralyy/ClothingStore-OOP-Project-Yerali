@@ -5,7 +5,7 @@ public class Order {
     private int id;
     private String customerName;
     private double totalAmount;
-    private String status; // Pending, Completed, Cancelled
+    private String status;
 
     public Order(int id, String customerName, double totalAmount, String status) {
         this.id = id;
