@@ -70,7 +70,6 @@
             return price > 50000;
         }
 
-        // ===== WEEK 4 REQUIRED METHOD =====
         public abstract String getItemType();
 
         @Override
