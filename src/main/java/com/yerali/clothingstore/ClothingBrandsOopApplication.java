@@ -1,68 +1,101 @@
 package com.yerali.clothingstore;
 
+import java.util.Scanner;
+
 public class ClothingBrandsOopApplication {
 
     public static void main(String[] args) {
 
-        System.out.println("=== Clothing Store OOP System (Week 2) ===");
+        Scanner scanner = new Scanner(System.in);
+        StoreManager manager = new StoreManager();
+
+        System.out.println("=== Clothing Store OOP System (Week 4) ===");
         System.out.println("Project: Clothing Brands Management");
         System.out.println("Student: Yerali");
         System.out.println("-----------------------------------------");
 
-        Brand brand1 = new Brand(1, "ZARA", "Spain", 4.6);
-        Brand brand2 = new Brand(2, "Uniqlo", "Japan", 4.3);
 
-        ClothingItem item1 = new ClothingItem(101, "Basic T-Shirt", "M", 12990, brand2);
-        ClothingItem item2 = new ClothingItem(102, "Jacket", "L", 79990, brand1);
+        manager.addBrand(new Brand(1, "ZARA", "Spain", 4.6));
+        manager.addBrand(new Brand(2, "Uniqlo", "Japan", 4.3));
 
-        Order order1 = new Order(5001, "Ayan", 0, "Pending");
 
-        System.out.println("\n--- OBJECTS (toString) ---");
-        System.out.println(brand1);
-        System.out.println(brand2);
-        System.out.println(item1);
-        System.out.println(item2);
-        System.out.println(order1);
+        ClothingItem item1 = new TShirt(
+                101,
+                "Basic T-Shirt",
+                "M",
+                12990,
+                manager.findBrandById(2),
+                "Short"
+        );
 
-        System.out.println("\n--- TESTING GETTERS ---");
-        System.out.println("brand1 name: " + brand1.getName());
-        System.out.println("item2 price: " + item2.getPrice());
-        System.out.println("order1 status: " + order1.getStatus());
+        ClothingItem item2 = new Jacket(
+                102,
+                "Jacket",
+                "L",
+                79990,
+                manager.findBrandById(1),
+                true
+        );
 
-        System.out.println("\n--- TESTING SETTERS ---");
-        brand2.setCountry("Japan (Tokyo)");
-        item1.setSize("S");
-        order1.setCustomerName("Aruzhan");
-        System.out.println("Updated brand2 country: " + brand2.getCountry());
-        System.out.println("Updated item1 size: " + item1.getSize());
-        System.out.println("Updated order1 customer: " + order1.getCustomerName());
+        manager.addItem(item1);
+        manager.addItem(item2);
 
-        System.out.println("\n--- TESTING METHODS (LOGIC) ---");
+        boolean running = true;
 
-        System.out.println("Is brand1 premium? " + brand1.isPremium());
-        brand2.increaseRating(0.4);
-        System.out.println("brand2 rating after increase: " + brand2.getRating());
+        while (running) {
 
-        System.out.println("item2 expensive before discount? " + item2.isExpensive());
-        item2.applyDiscount(15);
-        System.out.println("item2 price after 15% discount: " + item2.getPrice());
-        System.out.println("item2 expensive after discount? " + item2.isExpensive());
+            System.out.println("\n=== CLOTHING STORE MENU ===");
+            System.out.println("1. Show brands");
+            System.out.println("2. Show clothing items");
+            System.out.println("3. Show orders");
+            System.out.println("4. Add order");
+            System.out.println("0. Exit");
+            System.out.print("Choose option: ");
 
-        order1.addToTotal(item1.getPrice());
-        order1.addToTotal(item2.getPrice());
-        System.out.println("order1 total after adding items: " + order1.getTotalAmount());
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-        System.out.println("order1 is pending? " + order1.isPending());
-        order1.complete();
-        System.out.println("order1 status after complete(): " + order1.getStatus());
+            switch (choice) {
 
-        System.out.println("\n--- FINAL STATE ---");
-        System.out.println(brand2);
-        System.out.println(item1);
-        System.out.println(item2);
-        System.out.println(order1);
+                case 1:
+                    manager.showBrands();
+                    break;
 
-        System.out.println("\n=== Program Complete ===");
+                case 2:
+                    manager.showItems();
+                    break;
+
+                case 3:
+                    manager.showOrders();
+                    break;
+
+                case 4:
+                    System.out.print("Enter order id: ");
+                    int orderId = scanner.nextInt();
+                    scanner.nextLine();
+
+                    System.out.print("Enter customer name: ");
+                    String customerName = scanner.nextLine();
+
+                    Order order = new Order(orderId, customerName, 0, "Pending");
+                    manager.addOrder(order);
+
+                    System.out.println("Order successfully added.");
+                    break;
+
+                case 0:
+                    running = false;
+                    System.out.println("Exiting program...");
+                    break;
+
+                default:
+                    System.out.println("Invalid option!");
+            }
+        }
+
+        scanner.close();
+        System.out.println("=== Program Complete ===");
     }
 }
+
 

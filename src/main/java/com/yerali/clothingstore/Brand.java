@@ -5,13 +5,13 @@ public class Brand {
     private int id;
     private String name;
     private String country;
-    private double rating; // 0.0 to 5.0
+    private double rating;
 
     public Brand(int id, String name, String country, double rating) {
         this.id = id;
         this.name = name;
         this.country = country;
-        setRating(rating); // uses validation
+        setRating(rating);
     }
 
     public int getId() {
