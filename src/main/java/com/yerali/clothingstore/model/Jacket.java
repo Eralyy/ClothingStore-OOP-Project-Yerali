@@ -1,4 +1,4 @@
-package com.yerali.clothingstore;
+package com.yerali.clothingstore.model;
 
 public class Jacket extends ClothingItem {
 

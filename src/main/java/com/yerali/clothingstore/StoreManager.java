@@ -1,12 +1,16 @@
 package com.yerali.clothingstore;
 
+import com.yerali.clothingstore.model.Brand;
+import com.yerali.clothingstore.model.ClothingItem;
+import com.yerali.clothingstore.model.Order;
+
 import java.util.ArrayList;
 
 public class StoreManager {
 
-    private ArrayList<Brand> brands;
-    private ArrayList<ClothingItem> items;
-    private ArrayList<Order> orders;
+    private final ArrayList<Brand> brands;
+    private final ArrayList<ClothingItem> items;
+    private final ArrayList<Order> orders;
 
     public StoreManager() {
         brands = new ArrayList<>();
@@ -14,16 +18,12 @@ public class StoreManager {
         orders = new ArrayList<>();
     }
 
-
-
+    // ===== BRAND METHODS =====
     public void addBrand(Brand brand) {
-        if (brand != null) {
-            brands.add(brand);
+        if (brand == null) {
+            throw new IllegalArgumentException("Brand cannot be null");
         }
-    }
-
-    public ArrayList<Brand> getBrands() {
-        return brands;
+        brands.add(brand);
     }
 
     public void showBrands() {
@@ -43,18 +43,15 @@ public class StoreManager {
                 return b;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Brand with ID " + id + " not found");
     }
 
-
+    // ===== ITEM METHODS =====
     public void addItem(ClothingItem item) {
-        if (item != null) {
-            items.add(item);
+        if (item == null) {
+            throw new IllegalArgumentException("Clothing item cannot be null");
         }
-    }
-
-    public ArrayList<ClothingItem> getItems() {
-        return items;
+        items.add(item);
     }
 
     public void showItems() {
@@ -74,19 +71,15 @@ public class StoreManager {
                 return i;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Item with ID " + id + " not found");
     }
 
-
-
+    // ===== ORDER METHODS =====
     public void addOrder(Order order) {
-        if (order != null) {
-            orders.add(order);
+        if (order == null) {
+            throw new IllegalArgumentException("Order cannot be null");
         }
-    }
-
-    public ArrayList<Order> getOrders() {
-        return orders;
+        orders.add(order);
     }
 
     public void showOrders() {
@@ -106,7 +99,6 @@ public class StoreManager {
                 return o;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Order with ID " + id + " not found");
     }
 }
-

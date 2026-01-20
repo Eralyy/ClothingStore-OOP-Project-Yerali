@@ -1,4 +1,4 @@
-package com.yerali.clothingstore;
+package com.yerali.clothingstore.model;
 
 public class Order {
 
@@ -8,12 +8,13 @@ public class Order {
     private String status;
 
     public Order(int id, String customerName, double totalAmount, String status) {
-        this.id = id;
-        this.customerName = customerName;
+        setId(id);
+        setCustomerName(customerName);
         setTotalAmount(totalAmount);
         setStatus(status);
     }
 
+    // ===== GETTERS =====
     public int getId() {
         return id;
     }
@@ -30,43 +31,47 @@ public class Order {
         return status;
     }
 
+    // ===== SETTERS (WITH EXCEPTIONS – WEEK 6 RULE) =====
     public void setId(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Order ID must be positive");
+        }
         this.id = id;
     }
 
     public void setCustomerName(String customerName) {
+        if (customerName == null || customerName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Customer name cannot be empty");
+        }
         this.customerName = customerName;
     }
 
     public void setTotalAmount(double totalAmount) {
         if (totalAmount < 0) {
-            this.totalAmount = 0;
-        } else {
-            this.totalAmount = totalAmount;
+            throw new IllegalArgumentException("Total amount cannot be negative");
         }
+        this.totalAmount = totalAmount;
     }
 
     public void setStatus(String status) {
-        if (status == null) {
-            this.status = "Pending";
-            return;
+        if (status == null || status.trim().isEmpty()) {
+            throw new IllegalArgumentException("Order status cannot be empty");
         }
+
         String s = status.trim().toLowerCase();
-        if (s.equals("pending") || s.equals("completed") || s.equals("cancelled")) {
-            this.status = capitalize(s);
-        } else {
-            this.status = "Pending";
+        if (!s.equals("pending") && !s.equals("completed") && !s.equals("cancelled")) {
+            throw new IllegalArgumentException("Invalid order status: " + status);
         }
+
+        this.status = capitalize(s);
     }
 
-    private String capitalize(String s) {
-        return s.substring(0, 1).toUpperCase() + s.substring(1);
-    }
-
+    // ===== BUSINESS METHODS =====
     public void addToTotal(double amount) {
-        if (amount > 0) {
-            totalAmount += amount;
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
         }
+        totalAmount += amount;
     }
 
     public void complete() {
@@ -74,7 +79,12 @@ public class Order {
     }
 
     public boolean isPending() {
-        return status.equals("Pending");
+        return "Pending".equals(status);
+    }
+
+
+    private String capitalize(String s) {
+        return s.substring(0, 1).toUpperCase() + s.substring(1);
     }
 
     @Override

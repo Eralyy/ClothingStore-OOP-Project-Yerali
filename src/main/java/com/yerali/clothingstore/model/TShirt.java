@@ -1,4 +1,4 @@
-package com.yerali.clothingstore;
+package com.yerali.clothingstore.model;
 
 public class TShirt extends ClothingItem {
 
@@ -15,6 +15,9 @@ public class TShirt extends ClothingItem {
     }
 
     public void setSleeveType(String sleeveType) {
+        if (sleeveType == null || sleeveType.trim().isEmpty()) {
+            throw new IllegalArgumentException("Sleeve type cannot be empty");
+        }
         this.sleeveType = sleeveType;
     }
 
@@ -23,4 +26,3 @@ public class TShirt extends ClothingItem {
         return "T-Shirt";
     }
 }
-
