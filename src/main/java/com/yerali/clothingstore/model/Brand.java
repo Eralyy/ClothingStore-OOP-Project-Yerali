@@ -14,7 +14,6 @@ public class Brand {
         setRating(rating);
     }
 
-    // ===== GETTERS =====
     public int getId() {
         return id;
     }
@@ -31,7 +30,6 @@ public class Brand {
         return rating;
     }
 
-    // ===== SETTERS (WITH EXCEPTIONS) =====
     public void setId(int id) {
         if (id <= 0) {
             throw new IllegalArgumentException("Brand ID must be positive");
@@ -62,7 +60,6 @@ public class Brand {
         this.rating = rating;
     }
 
-    // ===== BUSINESS METHODS =====
     public boolean isPremium() {
         return rating >= 4.5;
     }

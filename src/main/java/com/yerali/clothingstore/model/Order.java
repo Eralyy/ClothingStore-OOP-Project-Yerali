@@ -14,7 +14,6 @@ public class Order {
         setStatus(status);
     }
 
-    // ===== GETTERS =====
     public int getId() {
         return id;
     }
@@ -31,7 +30,7 @@ public class Order {
         return status;
     }
 
-    // ===== SETTERS (WITH EXCEPTIONS – WEEK 6 RULE) =====
+
     public void setId(int id) {
         if (id <= 0) {
             throw new IllegalArgumentException("Order ID must be positive");
@@ -66,7 +65,6 @@ public class Order {
         this.status = capitalize(s);
     }
 
-    // ===== BUSINESS METHODS =====
     public void addToTotal(double amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Amount must be positive");

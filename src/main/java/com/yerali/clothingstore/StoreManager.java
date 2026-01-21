@@ -18,7 +18,6 @@ public class StoreManager {
         orders = new ArrayList<>();
     }
 
-    // ===== BRAND METHODS =====
     public void addBrand(Brand brand) {
         if (brand == null) {
             throw new IllegalArgumentException("Brand cannot be null");
@@ -46,7 +45,6 @@ public class StoreManager {
         throw new IllegalArgumentException("Brand with ID " + id + " not found");
     }
 
-    // ===== ITEM METHODS =====
     public void addItem(ClothingItem item) {
         if (item == null) {
             throw new IllegalArgumentException("Clothing item cannot be null");
@@ -74,7 +72,7 @@ public class StoreManager {
         throw new IllegalArgumentException("Item with ID " + id + " not found");
     }
 
-    // ===== ORDER METHODS =====
+
     public void addOrder(Order order) {
         if (order == null) {
             throw new IllegalArgumentException("Order cannot be null");

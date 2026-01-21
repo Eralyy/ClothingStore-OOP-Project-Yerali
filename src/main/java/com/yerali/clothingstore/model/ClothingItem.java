@@ -15,8 +15,14 @@ public abstract class ClothingItem {
         setPrice(price);
         setBrand(brand);
     }
+    public ClothingItem(int id, String name, double price, Brand brand){
+        setId(id);
+        setName(name);
+        setSize(size);
+        setPrice(price);
+        setBrand(brand);
+    }
 
-    // ===== GETTERS =====
     public int getId() {
         return id;
     }
@@ -37,7 +43,6 @@ public abstract class ClothingItem {
         return brand;
     }
 
-    // ===== SETTERS (WITH EXCEPTIONS – WEEK 6 RULE) =====
     public void setId(int id) {
         if (id <= 0) {
             throw new IllegalArgumentException("Item ID must be positive");
@@ -73,7 +78,7 @@ public abstract class ClothingItem {
         this.brand = brand;
     }
 
-    // ===== BUSINESS LOGIC =====
+
     public void applyDiscount(double percent) {
         if (percent < 0 || percent > 100) {
             throw new IllegalArgumentException("Discount must be between 0 and 100");
@@ -85,7 +90,6 @@ public abstract class ClothingItem {
         return price > 50000;
     }
 
-    // ===== ABSTRACT METHOD (REQUIRED) =====
     public abstract String getItemType();
 
     @Override

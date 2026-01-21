@@ -1,12 +1,7 @@
 package com.yerali.clothingstore.menu;
 
 import com.yerali.clothingstore.StoreManager;
-import com.yerali.clothingstore.model.Brand;
-import com.yerali.clothingstore.model.ClothingItem;
-import com.yerali.clothingstore.model.Jacket;
-import com.yerali.clothingstore.model.Order;
-import com.yerali.clothingstore.model.TShirt;
-
+import com.yerali.clothingstore.model.*;
 import java.util.Scanner;
 
 public class MenuManager implements Menu {
@@ -19,7 +14,6 @@ public class MenuManager implements Menu {
         scanner = new Scanner(System.in);
         manager = new StoreManager();
 
-        // Initial data
         manager.addBrand(new Brand(1, "ZARA", "Spain", 4.6));
         manager.addBrand(new Brand(2, "Uniqlo", "Japan", 4.3));
 
@@ -109,3 +103,4 @@ public class MenuManager implements Menu {
         System.out.println("Exiting program...");
     }
 }
+
