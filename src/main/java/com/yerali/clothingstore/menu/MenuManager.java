@@ -1,51 +1,28 @@
 package com.yerali.clothingstore.menu;
 
-import com.yerali.clothingstore.StoreManager;
+import com.yerali.clothingstore.database.ClothingItemDAO;
 import com.yerali.clothingstore.model.*;
+
 import java.util.Scanner;
 
 public class MenuManager implements Menu {
 
+    private final ClothingItemDAO itemDAO;
     private final Scanner scanner;
-    private final StoreManager manager;
     private boolean running = true;
 
     public MenuManager() {
+        itemDAO = new ClothingItemDAO();
         scanner = new Scanner(System.in);
-        manager = new StoreManager();
-
-        manager.addBrand(new Brand(1, "ZARA", "Spain", 4.6));
-        manager.addBrand(new Brand(2, "Uniqlo", "Japan", 4.3));
-
-        ClothingItem t1 = new TShirt(
-                101,
-                "Basic T-Shirt",
-                "M",
-                12990,
-                manager.findBrandById(2),
-                "Short"
-        );
-
-        ClothingItem j1 = new Jacket(
-                102,
-                "Winter Jacket",
-                "L",
-                79990,
-                manager.findBrandById(1),
-                true
-        );
-
-        manager.addItem(t1);
-        manager.addItem(j1);
     }
 
     @Override
     public void displayMenu() {
         System.out.println("\n=== CLOTHING STORE MENU ===");
-        System.out.println("1. Show brands");
-        System.out.println("2. Show clothing items");
-        System.out.println("3. Show orders");
-        System.out.println("4. Add order");
+        System.out.println("1. Show clothing items (from DB)");
+        System.out.println("2. Add clothing item");
+        System.out.println("3. Update clothing item");
+        System.out.println("4. Delete clothing item");
         System.out.println("0. Exit");
         System.out.print("Choose option: ");
     }
@@ -53,7 +30,7 @@ public class MenuManager implements Menu {
     @Override
     public void run() {
 
-        System.out.println("=== Clothing Store OOP System (Week 6) ===");
+        System.out.println("=== Clothing Store OOP System (Week 8) ===");
 
         while (running) {
             displayMenu();
@@ -62,39 +39,91 @@ public class MenuManager implements Menu {
                 int choice = Integer.parseInt(scanner.nextLine());
 
                 switch (choice) {
-                    case 1 -> manager.showBrands();
-                    case 2 -> manager.showItems();
-                    case 3 -> manager.showOrders();
-                    case 4 -> addOrder();
+                    case 1 -> showItemsFromDB();
+                    case 2 -> addItemToDB();
+                    case 3 -> updateItemInDB();
+                    case 4 -> deleteItemFromDB();
                     case 0 -> exit();
                     default -> System.out.println("Invalid option!");
                 }
 
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a number.");
-            } catch (IllegalArgumentException e) {
-                System.out.println("Error: " + e.getMessage());
             }
         }
 
         scanner.close();
     }
 
-    private void addOrder() {
+    /* ===================== MENU ACTIONS ===================== */
+
+    private void showItemsFromDB() {
+        System.out.println("\n--- ITEMS FROM DATABASE ---");
+        itemDAO.getAllItems().forEach(System.out::println);
+    }
+
+    private void addItemToDB() {
         try {
-            System.out.print("Enter order ID: ");
+            System.out.print("ID: ");
             int id = Integer.parseInt(scanner.nextLine());
 
-            System.out.print("Enter customer name: ");
+            System.out.print("Name: ");
             String name = scanner.nextLine();
 
-            Order order = new Order(id, name, 0, "Pending");
-            manager.addOrder(order);
+            System.out.print("Size: ");
+            String size = scanner.nextLine();
 
-            System.out.println("Order added successfully.");
+            System.out.print("Price: ");
+            double price = Double.parseDouble(scanner.nextLine());
 
-        } catch (NumberFormatException e) {
-            System.out.println("Order ID must be numeric.");
+            System.out.print("Brand name: ");
+            String brandName = scanner.nextLine();
+
+            Brand brand = new Brand(1, brandName, "Unknown", 4.0);
+
+            ClothingItem item = new TShirt(
+                    id,
+                    name,
+                    size,
+                    price,
+                    brand,
+                    "Short"
+            );
+
+            itemDAO.insertItem(item);
+
+        } catch (Exception e) {
+            System.out.println("Error adding item: " + e.getMessage());
+        }
+    }
+
+    private void updateItemInDB() {
+        try {
+            System.out.print("Item ID: ");
+            int id = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("New price: ");
+            double price = Double.parseDouble(scanner.nextLine());
+
+            System.out.print("New size: ");
+            String size = scanner.nextLine();
+
+            itemDAO.updateItem(id, price, size);
+
+        } catch (Exception e) {
+            System.out.println("Error updating item.");
+        }
+    }
+
+    private void deleteItemFromDB() {
+        try {
+            System.out.print("Item ID: ");
+            int id = Integer.parseInt(scanner.nextLine());
+
+            itemDAO.deleteItem(id);
+
+        } catch (Exception e) {
+            System.out.println("Error deleting item.");
         }
     }
 
@@ -103,4 +132,3 @@ public class MenuManager implements Menu {
         System.out.println("Exiting program...");
     }
 }
-

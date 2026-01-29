@@ -53,23 +53,22 @@ public class StoreManager {
     }
 
     public void showItems() {
-        System.out.println("\n--- CLOTHING ITEMS LIST ---");
-        if (items.isEmpty()) {
-            System.out.println("No clothing items available.");
+        System.out.println("\n---CLOTHING ITEMS---");
+        if ( items.isEmpty()){
+            System.out.println("No clothing items available");
             return;
-        }
-        for (ClothingItem i : items) {
+        } for (ClothingItem i : items){
             System.out.println(i);
         }
     }
 
     public ClothingItem findItemById(int id) {
-        for (ClothingItem i : items) {
-            if (i.getId() == id) {
-                return i;
-            }
-        }
-        throw new IllegalArgumentException("Item with ID " + id + " not found");
+       for ( ClothingItem i : items) {
+           if ( i.getId() == id){
+               return i;
+           }
+       }
+       throw new IllegalArgumentException("Item with Id" + id +"not found");
     }
 
 
@@ -91,12 +90,12 @@ public class StoreManager {
         }
     }
 
-    public Order findOrderById(int id) {
-        for (Order o : orders) {
-            if (o.getId() == id) {
-                return o;
+        public Order findOrderById(int id) {
+            for (Order o : orders) {
+                if (o.getId() == id) {
+                    return o;
+                }
             }
-        }
         throw new IllegalArgumentException("Order with ID " + id + " not found");
     }
 }

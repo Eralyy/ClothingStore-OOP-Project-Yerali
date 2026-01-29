@@ -1,13 +1,15 @@
 package com.yerali.clothingstore.model;
 
-public abstract class ClothingItem {
+public abstract class ClothingItem implements Discountable {
 
+    //fields
     private int id;
     private String name;
     private String size;
     private double price;
     private Brand brand;
 
+    //constructor with setter(same fields)
     public ClothingItem(int id, String name, String size, double price, Brand brand) {
         setId(id);
         setName(name);
@@ -15,14 +17,8 @@ public abstract class ClothingItem {
         setPrice(price);
         setBrand(brand);
     }
-    public ClothingItem(int id, String name, double price, Brand brand){
-        setId(id);
-        setName(name);
-        setSize(size);
-        setPrice(price);
-        setBrand(brand);
-    }
 
+    //getters
     public int getId() {
         return id;
     }
@@ -43,6 +39,7 @@ public abstract class ClothingItem {
         return brand;
     }
 
+    //setters with logical validation
     public void setId(int id) {
         if (id <= 0) {
             throw new IllegalArgumentException("Item ID must be positive");
@@ -78,12 +75,18 @@ public abstract class ClothingItem {
         this.brand = brand;
     }
 
-
+    //discount
+    @Override
     public void applyDiscount(double percent) {
         if (percent < 0 || percent > 100) {
             throw new IllegalArgumentException("Discount must be between 0 and 100");
         }
         price = price * (1 - percent / 100.0);
+    }
+    
+    @Override
+    public boolean isDiscountApplicable() {
+        return true;
     }
 
     public boolean isExpensive() {
