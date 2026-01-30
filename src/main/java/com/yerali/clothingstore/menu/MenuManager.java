@@ -19,10 +19,13 @@ public class MenuManager implements Menu {
     @Override
     public void displayMenu() {
         System.out.println("\n=== CLOTHING STORE MENU ===");
-        System.out.println("1. Show clothing items (from DB)");
+        System.out.println("1. Show all clothing items");
         System.out.println("2. Add clothing item");
         System.out.println("3. Update clothing item");
         System.out.println("4. Delete clothing item");
+        System.out.println("5. Search by name");
+        System.out.println("6. Search by price range");
+        System.out.println("7. Search by minimum price");
         System.out.println("0. Exit");
         System.out.print("Choose option: ");
     }
@@ -30,7 +33,7 @@ public class MenuManager implements Menu {
     @Override
     public void run() {
 
-        System.out.println("=== Clothing Store OOP System (Week 8) ===");
+        System.out.println("=== Clothing Store OOP System (Week 8 – CRUD + SEARCH) ===");
 
         while (running) {
             displayMenu();
@@ -39,16 +42,19 @@ public class MenuManager implements Menu {
                 int choice = Integer.parseInt(scanner.nextLine());
 
                 switch (choice) {
-                    case 1 -> showItemsFromDB();
-                    case 2 -> addItemToDB();
-                    case 3 -> updateItemInDB();
-                    case 4 -> deleteItemFromDB();
+                    case 1 -> showItems();
+                    case 2 -> addItem();
+                    case 3 -> updateItem();
+                    case 4 -> deleteItem();
+                    case 5 -> searchByName();
+                    case 6 -> searchByPriceRange();
+                    case 7 -> searchByMinPrice();
                     case 0 -> exit();
                     default -> System.out.println("Invalid option!");
                 }
 
             } catch (NumberFormatException e) {
-                System.out.println("Please enter a number.");
+                System.out.println("Please enter a valid number.");
             }
         }
 
@@ -57,12 +63,14 @@ public class MenuManager implements Menu {
 
     /* ===================== MENU ACTIONS ===================== */
 
-    private void showItemsFromDB() {
+    // SELECT
+    private void showItems() {
         System.out.println("\n--- ITEMS FROM DATABASE ---");
         itemDAO.getAllItems().forEach(System.out::println);
     }
 
-    private void addItemToDB() {
+    // INSERT
+    private void addItem() {
         try {
             System.out.print("ID: ");
             int id = Integer.parseInt(scanner.nextLine());
@@ -79,7 +87,14 @@ public class MenuManager implements Menu {
             System.out.print("Brand name: ");
             String brandName = scanner.nextLine();
 
-            Brand brand = new Brand(1, brandName, "Unknown", 4.0);
+            Brand brand = new Brand(
+                    Math.abs(id) + 1,   // гарантированно > 0
+                    brandName,
+                    "Unknown",
+                    4.0
+            );
+
+
 
             ClothingItem item = new TShirt(
                     id,
@@ -97,7 +112,8 @@ public class MenuManager implements Menu {
         }
     }
 
-    private void updateItemInDB() {
+    // UPDATE
+    private void updateItem() {
         try {
             System.out.print("Item ID: ");
             int id = Integer.parseInt(scanner.nextLine());
@@ -115,7 +131,8 @@ public class MenuManager implements Menu {
         }
     }
 
-    private void deleteItemFromDB() {
+    // DELETE
+    private void deleteItem() {
         try {
             System.out.print("Item ID: ");
             int id = Integer.parseInt(scanner.nextLine());
@@ -124,6 +141,43 @@ public class MenuManager implements Menu {
 
         } catch (Exception e) {
             System.out.println("Error deleting item.");
+        }
+    }
+
+    // SEARCH BY NAME
+    private void searchByName() {
+        System.out.print("Enter name to search: ");
+        String name = scanner.nextLine();
+
+        itemDAO.searchByName(name).forEach(System.out::println);
+    }
+
+    // SEARCH BY PRICE RANGE
+    private void searchByPriceRange() {
+        try {
+            System.out.print("Min price: ");
+            double min = Double.parseDouble(scanner.nextLine());
+
+            System.out.print("Max price: ");
+            double max = Double.parseDouble(scanner.nextLine());
+
+            itemDAO.searchByPriceRange(min, max).forEach(System.out::println);
+
+        } catch (Exception e) {
+            System.out.println("Invalid price range.");
+        }
+    }
+
+    // SEARCH BY MIN PRICE
+    private void searchByMinPrice() {
+        try {
+            System.out.print("Minimum price: ");
+            double min = Double.parseDouble(scanner.nextLine());
+
+            itemDAO.searchByMinPrice(min).forEach(System.out::println);
+
+        } catch (Exception e) {
+            System.out.println("Invalid price.");
         }
     }
 
