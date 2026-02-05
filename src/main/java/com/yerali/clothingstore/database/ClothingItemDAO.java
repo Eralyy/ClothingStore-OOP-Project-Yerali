@@ -2,28 +2,25 @@ package com.yerali.clothingstore.database;
 
 import com.yerali.clothingstore.model.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClothingItemDAO {
 
-    // ===================== INSERT (Week 7) =====================
-    public void insertItem(ClothingItem item) {
+    // insert
+    public void insertItem(ClothingItem item){
 
         String sql = """
                 INSERT INTO clothing_item
                 (id, name, size, price, brand_name, item_type)
-                VALUES (?, ?, ?, ?, ?, ?)
+                VALUES(?,?,?,?,?,?)
                 """;
 
         Connection connection = DatabaseConnection.getConnection();
         if (connection == null) return;
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)){
 
             stmt.setInt(1, item.getId());
             stmt.setString(2, item.getName());
@@ -33,7 +30,8 @@ public class ClothingItemDAO {
             stmt.setString(6, item.getItemType());
 
             stmt.executeUpdate();
-            System.out.println("✅ Clothing item inserted");
+            System.out.println("Clothing item inserted");
+
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,39 +40,22 @@ public class ClothingItemDAO {
         }
     }
 
-    // ===================== SELECT (Week 7) =====================
-    public List<ClothingItem> getAllItems() {
+    // select
 
-        List<ClothingItem> items = new ArrayList<>();
-        String sql = "SELECT * FROM clothing_item ORDER BY id";
-
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection == null) return items;
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                items.add(mapRowToItem(rs));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            DatabaseConnection.close(connection);
-        }
-
-        return items;
+    public List<ClothingItem> getAllItems(){
+        return executeSelect(
+                "SELECT * FROM clothing_item ORDER BY id",
+                null
+        );
     }
 
-    // ===================== UPDATE (Week 8) =====================
-    public boolean updateItem(int id, double newPrice, String newSize) {
-
+    // update
+    public boolean updateItem(int id, double newPrice, String newSize){
         String sql = """
-                UPDATE clothing_item
-                SET price = ?, size = ?
-                WHERE id = ?
-                """;
+               UPDATE clothing_item 
+               SET price = ?, size = ?
+               WHERE id = ?
+               """;
 
         Connection connection = DatabaseConnection.getConnection();
         if (connection == null) return false;
@@ -85,15 +66,7 @@ public class ClothingItemDAO {
             stmt.setString(2, newSize);
             stmt.setInt(3, id);
 
-            int rows = stmt.executeUpdate();
-
-            if (rows > 0) {
-                System.out.println("✅ Item updated");
-                return true;
-            } else {
-                System.out.println("⚠️ Item not found");
-                return false;
-            }
+            return stmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -103,10 +76,14 @@ public class ClothingItemDAO {
         }
     }
 
-    // ===================== DELETE (Week 8) =====================
-    public boolean deleteItem(int id) {
+    // delete
+    public boolean deleteItem (int id){
 
-        String sql = "DELETE FROM clothing_item WHERE id = ?";
+        String sql = """
+               DELETE FROM clothing_item 
+               WHERE id = ?
+               """;
+
 
         Connection connection = DatabaseConnection.getConnection();
         if (connection == null) return false;
@@ -114,15 +91,7 @@ public class ClothingItemDAO {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
-            int rows = stmt.executeUpdate();
-
-            if (rows > 0) {
-                System.out.println("🗑️ Item deleted");
-                return true;
-            } else {
-                System.out.println("⚠️ Item not found");
-                return false;
-            }
+            return stmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -132,7 +101,89 @@ public class ClothingItemDAO {
         }
     }
 
-    // ===================== HELPER =====================
+    // search by name
+    public List<ClothingItem> searchByName(String keyword){
+        return executeSelect(
+                "SELECT * FROM clothing_item WHERE name ILIKE ORDER BY id",
+                stmt -> stmt.setString(1, "%" + keyword + "%")
+        );
+    }
+
+    // search by min price
+    public List<ClothingItem> searchByMinPrice(double min) {
+        return executeSelect(
+                "SELECT * FROM clothing_item WHERE price >= ? ORDER BY price",
+                stmt -> stmt.setDouble(1, min)
+        );
+    }
+
+    // search by brand
+    public List<ClothingItem> searchByBrand(String brandName) {
+        return executeSelect(
+                "SELECT * FROM clothing_item WHERE brand_name ILIKE ? ORDER BY id",
+                stmt -> stmt.setString(1, "%" + brandName + "%")
+        );
+    }
+
+    // search by type
+    public List<ClothingItem> searchByType(String type) {
+        return executeSelect(
+                "SELECT * FROM clothing_item WHERE item_type = ? ORDER BY id",
+                stmt -> stmt.setString(1, type)
+        );
+    }
+
+    // search by price range
+    public List<ClothingItem> searchByPriceRange(double min, double max) {
+        return executeSelect(
+                "SELECT * FROM clothing_item WHERE price BETWEEN ? AND ? ORDER BY price",
+                stmt -> {
+                    stmt.setDouble(1, min);
+                    stmt.setDouble(2, max);
+                }
+        );
+    }
+
+
+
+    // select t-shirts
+    public List<ClothingItem> getTShirts() {
+        return executeSelect(
+                "SELECT * FROM clothing_item WHERE item_type = 'T-Shirt' ORDER BY id",
+                null
+        );
+    }
+
+    // select helper
+    private List<ClothingItem> executeSelect(
+            String sql,
+            StatementPreparer preparer
+    ) {
+        List<ClothingItem> items = new ArrayList<>();
+        Connection connection = DatabaseConnection.getConnection();
+        if (connection == null) return items;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            if (preparer != null) {
+                preparer.prepare(stmt);
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                items.add(mapRowToItem(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseConnection.close(connection);
+        }
+
+        return items;
+    }
+
+    // row to object
     private ClothingItem mapRowToItem(ResultSet rs) throws SQLException {
 
         int id = rs.getInt("id");
@@ -143,114 +194,21 @@ public class ClothingItemDAO {
         String type = rs.getString("item_type");
 
         Brand brand = new Brand(
-                Math.abs(id) + 1,   // гарантированно > 0
+                Math.abs(id) + 1,   // always positive
                 brandName,
                 "Unknown",
                 4.0
         );
 
-
-
         return switch (type) {
-            case "Jacket" ->
-                    new Jacket(id, name, size, price, brand, false);
-            default ->
-                    new TShirt(id, name, size, price, brand, "Short");
+            case "Jacket" -> new Jacket(id, name, size, price, brand, false);
+            default -> new TShirt(id, name, size, price, brand, "Short");
         };
     }
-    // ===================== SEARCH BY NAME =====================
-    public List<ClothingItem> searchByName(String keyword) {
 
-        List<ClothingItem> items = new ArrayList<>();
-        String sql = """
-            SELECT * FROM clothing_item
-            WHERE name ILIKE ?
-            ORDER BY id
-            """;
-
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection == null) return items;
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-
-            stmt.setString(1, "%" + keyword + "%");
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                items.add(mapRowToItem(rs));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            DatabaseConnection.close(connection);
-        }
-
-        return items;
+    // interface
+    @FunctionalInterface
+    private interface StatementPreparer {
+        void prepare(PreparedStatement stmt) throws SQLException;
     }
-
-    // ===================== SEARCH BY PRICE RANGE =====================
-    public List<ClothingItem> searchByPriceRange(double min, double max) {
-
-        List<ClothingItem> items = new ArrayList<>();
-        String sql = """
-            SELECT * FROM clothing_item
-            WHERE price BETWEEN ? AND ?
-            ORDER BY price
-            """;
-
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection == null) return items;
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-
-            stmt.setDouble(1, min);
-            stmt.setDouble(2, max);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                items.add(mapRowToItem(rs));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            DatabaseConnection.close(connection);
-        }
-
-        return items;
-    }
-
-    // ===================== SEARCH BY MIN PRICE =====================
-    public List<ClothingItem> searchByMinPrice(double min) {
-
-        List<ClothingItem> items = new ArrayList<>();
-        String sql = """
-            SELECT * FROM clothing_item
-            WHERE price >= ?
-            ORDER BY price
-            """;
-
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection == null) return items;
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-
-            stmt.setDouble(1, min);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                items.add(mapRowToItem(rs));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            DatabaseConnection.close(connection);
-        }
-
-        return items;
-    }
-
 }
-
