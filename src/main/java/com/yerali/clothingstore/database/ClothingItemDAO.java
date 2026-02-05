@@ -40,14 +40,7 @@ public class ClothingItemDAO {
         }
     }
 
-    // select
 
-    public List<ClothingItem> getAllItems(){
-        return executeSelect(
-                "SELECT * FROM clothing_item ORDER BY id",
-                null
-        );
-    }
 
     // update
     public boolean updateItem(int id, double newPrice, String newSize){
@@ -106,6 +99,15 @@ public class ClothingItemDAO {
         return executeSelect(
                 "SELECT * FROM clothing_item WHERE name ILIKE ORDER BY id",
                 stmt -> stmt.setString(1, "%" + keyword + "%")
+        );
+    }
+
+    // select
+
+    public List<ClothingItem> getAllItems(){
+        return executeSelect(
+                "SELECT * FROM clothing_item ORDER BY id",
+                null
         );
     }
 
